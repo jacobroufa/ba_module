@@ -1,0 +1,6 @@
+name = BrandonAcademy Custom Module
+description = Custom stuff for Brandon Academy
+core = 7.x
+package = Other
+
+files[] = brandonacademy.module

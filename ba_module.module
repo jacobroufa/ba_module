@@ -1,0 +1,71 @@
+<?php
+
+/**
+ * Implement hook_entity_info_alter
+ */
+ 
+function ba_module_entity_info_alter(&$entity_info) {
+  $entity_info['node']['view modes']['recent_tutorials'] = array(
+      'label' => t('Recent Tutorials'),
+      'custom settings' => TRUE,
+  );
+}
+
+/**
+ * Implement hook_block_info()
+ */
+
+function ba_module_block_info() {
+  $blocks['recent_tutorials'] = array(
+    'info' => t('Recent Tutorials'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  return $blocks;
+}
+
+/**
+ * Implement hook_block_view()
+ */
+
+function ba_module_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+    case 'recent_tutorials':
+      $results = array();
+      $terms = array(2989, 3193);
+
+      foreach ($terms as $tid) {
+        $result = NULL;
+        $query = new EntityFieldQuery;
+    
+        $query
+          ->entityCondition('entity_type', 'node')
+          ->entityCondition('bundle', 'article')
+          ->propertyCondition('status', 1)
+          ->fieldCondition('field_instrument', 'tid', $tid, '=')
+          ->propertyOrderBy('created', 'DESC')
+          ->range(0,10);
+
+        $result = $query->execute();
+        
+        if ($result) {
+          $results += entity_load('node', array_keys($result['node']));
+          //$results += array_keys($result['node']);
+        }
+      }
+  
+      shuffle($results);
+      $sliced = array_slice($results, 0, 10);
+      $view = node_view_multiple($sliced, 'recent_tutorials');
+      dpm($view);
+
+      $block['subject'] = NULL;
+      $block['content'] = $view;
+
+      break;
+  }
+
+  return $block;
+}
+
