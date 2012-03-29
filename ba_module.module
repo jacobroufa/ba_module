@@ -49,15 +49,16 @@ function ba_module_block_view($delta = '') {
 
         $result = $query->execute();
         if ($result) {
-          $results += entity_view('node', entity_load('node', array_keys($result['node'])), 'recent_tutorials');
+          $results += entity_load('node', array_keys($result['node']));
         }
       }
  
       shuffle($results);
       $sliced = array_slice($results, 0, 10);
+      $view = entity_view('node', $sliced, 'recent_tutorials');
 
       $block['subject'] = NULL;
-      $block['content'] = $sliced;
+      $block['content'] = $view;
 
       break;
   }
