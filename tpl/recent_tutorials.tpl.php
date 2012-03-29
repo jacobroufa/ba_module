@@ -7,7 +7,6 @@
   <?php print render($title_suffix); ?>
 
   <div class="content recent_tutorials"<?php print $content_attributes; ?>>
-    <?php print $variables['content'] ?>
-    <?php dpr($variables); ?>
+    <?php print $content ?>
   </div>
 </div>

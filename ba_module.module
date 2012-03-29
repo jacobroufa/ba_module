@@ -58,7 +58,7 @@ function ba_module_block_view($delta = '') {
       $view = entity_view('node', $sliced, 'recent_tutorials');
 
       $block['subject'] = NULL;
-      $block['content'] = theme('recent_tutorials', array('title' => NULL, 'content' => $view['node']));
+      $block['content'] = theme('recent_tutorials', array('title' => NULL, 'content' => render($view)));
 
       break;
   }
@@ -85,5 +85,5 @@ function ba_module_theme() {
  */
 
 function template_preprocess_recent_tutorials(&$variables) {
-  dpm($variables);
+  //dpm($variables);
 }
