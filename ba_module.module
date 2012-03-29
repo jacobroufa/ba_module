@@ -58,7 +58,7 @@ function ba_module_block_view($delta = '') {
       $view = entity_view('node', $sliced, 'recent_tutorials');
 
       $block['subject'] = NULL;
-      $block['content'] = theme('recent_tutorials', array('title' => NULL, 'content' => $view));
+      $block['content'] = theme('recent_tutorials', array('title' => NULL, 'content' => $view['node']));
 
       break;
   }
@@ -73,7 +73,8 @@ function ba_module_block_view($delta = '') {
 function ba_module_theme() {
   return array(
     'recent_tutorials' => array(
-      'template' => 'tpl/recent_tutorials',
+      'template' => 'recent_tutorials',
+      'path' => drupal_get_path('module', 'ba_module') . '/tpl',
       'variables' => array('title' => NULL, 'content' => NULL),
     ),
   );
