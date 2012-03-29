@@ -49,16 +49,12 @@ function ba_module_block_view($delta = '') {
 
         $result = $query->execute();
         if ($result) {
-          //$results += entity_load('node', array_keys($result['node']));
-          $results += entity_view('node', node_load_multiple(array_keys($result['node'])), 'recent_tutorials');
-          //$results += array_keys($result['node']);
+          $results += entity_view('node', entity_load('node', array_keys($result['node'])), 'recent_tutorials');
         }
       }
  
-      //dpm($results); 
       shuffle($results);
       $sliced = array_slice($results, 0, 10);
-      //dpm($sliced);
 
       $block['subject'] = NULL;
       $block['content'] = $sliced;
