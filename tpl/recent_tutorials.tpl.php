@@ -1,12 +1,7 @@
-<div id="<?php print $block_html_id; ?>" class="<?php print $classes; ?>"<?php print $attributes; ?>>
-
-  <?php print render($title_prefix); ?>
-  <?php if ($block->subject): ?>
-    <h2<?php print $title_attributes; ?>><?php print $block->subject ?></h2>
-  <?php endif;?>
-  <?php print render($title_suffix); ?>
-
-  <div class="content recent_tutorials"<?php print $content_attributes; ?>>
-    <?php print $content ?>
+<div id="recent-tutorials">
+  <div class="recent-tutorials">
+    <a id="previous">Previous</a>
+    <div class="tutorial-list"><?php print $content ?></div>
+    <a id="next">Next</a>
   </div>
 </div>
