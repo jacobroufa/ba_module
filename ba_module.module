@@ -3,10 +3,13 @@
 /**
  * Implement hook_entity_info_alter
  */
- 
 function ba_module_entity_info_alter(&$entity_info) {
   $entity_info['node']['view modes']['recent_tutorials'] = array(
       'label' => t('Recent Tutorials'),
+      'custom settings' => TRUE,
+  );
+  $entity_info['node']['view modes']['discover_tutorials'] = array(
+      'label' => t('Discover Tutorials'),
       'custom settings' => TRUE,
   );
 }
@@ -14,7 +17,6 @@ function ba_module_entity_info_alter(&$entity_info) {
 /**
  * Implement hook_block_info()
  */
-
 function ba_module_block_info() {
   $blocks['recent_tutorials'] = array(
     'info' => t('Recent Tutorials'),
@@ -26,7 +28,6 @@ function ba_module_block_info() {
 /**
  * Implement hook_block_view()
  */
-
 function ba_module_block_view($delta = '') {
   $block = array();
 
@@ -38,7 +39,7 @@ function ba_module_block_view($delta = '') {
       foreach ($terms as $tid) {
         $result = NULL;
         $query = new EntityFieldQuery;
-    
+
         $query
           ->entityCondition('entity_type', 'node')
           ->entityCondition('bundle', 'article')
@@ -52,7 +53,7 @@ function ba_module_block_view($delta = '') {
           $results += entity_load('node', array_keys($result['node']));
         }
       }
- 
+
       shuffle($results);
       $sliced = array_slice($results, 0, 10);
       $view = entity_view('node', $sliced, 'recent_tutorials');
@@ -67,7 +68,7 @@ function ba_module_block_view($delta = '') {
 }
 
 /**
- * Implement hook_theme()
+ * Preprocess recent_tutorials block
  */
 
 function ba_module_theme() {

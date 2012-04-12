@@ -1,7 +1,9 @@
 <div id="recent-tutorials">
   <div class="recent-tutorials">
-    <a id="previous">Previous</a>
-    <div class="tutorial-list"><?php print $content ?></div>
-    <a id="next">Next</a>
+    <a id="previous" href="#">Previous</a>
+    <ul class="tutorial-list">
+      <?php print $content ?>
+    </ul>
+    <a id="next" href="#">Next</a>
   </div>
 </div>
