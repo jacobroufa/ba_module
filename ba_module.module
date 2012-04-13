@@ -70,7 +70,36 @@ function ba_module_block_view($delta = '') {
 /**
  * Preprocess recent_tutorials block
  */
+function template_preprocess_recent_tutorials(&$variables) {
+  //dpm($variables);
+}
 
+/**
+ * Implement hook_men()
+ */
+function ba_module_menu() {
+  $items['discover1'] = array(
+    'title' => 'Discover',
+    'page callback' => 'ba_module_discover',
+    'page arguments' => array(),
+    'menu_name' => 'menu-top-menu',
+    'weight' => -50,
+    'access arguments' => array('access content'),
+  );
+
+  return $items;
+}
+
+/**
+ * Page callback for Discover
+ */
+function ba_module_discover() {
+  return theme('discover');
+}
+
+/**
+ * Implement hook_theme()
+ */
 function ba_module_theme() {
   return array(
     'recent_tutorials' => array(
@@ -78,13 +107,10 @@ function ba_module_theme() {
       'path' => drupal_get_path('module', 'ba_module') . '/tpl',
       'variables' => array('title' => NULL, 'content' => NULL),
     ),
+    'discover' => array(
+      'template' => 'discover',
+      'path' => drupal_get_path('module', 'ba_module') .'/tpl',
+      'variables' => array(),
+    ),
   );
-}
-
-/**
- * Preprocess recent_tutorials block
- */
-
-function template_preprocess_recent_tutorials(&$variables) {
-  //dpm($variables);
 }
