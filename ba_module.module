@@ -22,6 +22,10 @@ function ba_module_block_info() {
     'info' => t('Recent Tutorials'),
     'cache' => DRUPAL_NO_CACHE,
   );
+  $blocks['beginner_tutorials'] = array(
+    'info' => t('Beginner Tutorials'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
   return $blocks;
 }
 
@@ -62,19 +66,55 @@ function ba_module_block_view($delta = '') {
       $block['content'] = theme('recent_tutorials', array('title' => NULL, 'content' => render($view)));
 
       break;
+
+    case 'beginner_tutorials':
+      $results = array();
+      $terms = array(2989, 3193);
+
+      foreach ($terms as $tid) {
+        $result = NULL;
+        $query = new EntityFieldQuery;
+
+        $query
+          ->entityCondition('entity_type', 'node')
+          ->entityCondition('bundle', 'article')
+          ->propertyCondition('status', 1)
+          ->fieldCondition('field_instrument', 'tid', $tid, '=')
+          ->fieldCondition('field_difficulty', 'tid', 3385, '=')
+          ->propertyOrderBy('created', 'DESC')
+          ->range(0,10);
+
+        $result = $query->execute();
+        if ($result) {
+          $results += entity_load('node', array_keys($result['node']));
+        }
+      }
+
+      shuffle($results);
+      $sliced = array_slice($results, 0, 10);
+      $view = entity_view('node', $sliced, 'recent_tutorials');
+
+      $block['subject'] = NULL;
+      $block['content'] = theme('beginner_tutorials', array('title' => NULL, 'content' => render($view)));
+
+      break;
   }
 
   return $block;
 }
 
 /**
- * Preprocess recent_tutorials block
+ * Preprocess recent_tutorials and beginner_tutorials block
  */
-
 function ba_module_theme() {
   return array(
     'recent_tutorials' => array(
       'template' => 'recent_tutorials',
+      'path' => drupal_get_path('module', 'ba_module') . '/tpl',
+      'variables' => array('title' => NULL, 'content' => NULL),
+    ),
+    'beginner_tutorials' => array(
+      'template' => 'beginner_tutorials',
       'path' => drupal_get_path('module', 'ba_module') . '/tpl',
       'variables' => array('title' => NULL, 'content' => NULL),
     ),
@@ -84,7 +124,13 @@ function ba_module_theme() {
 /**
  * Preprocess recent_tutorials block
  */
-
 function template_preprocess_recent_tutorials(&$variables) {
+  //dpm($variables);
+}
+
+/**
+ * Preprocess beginner_tutorials block
+ */
+function template_preprocess_beginner_tutorials(&$variables) {
   //dpm($variables);
 }
