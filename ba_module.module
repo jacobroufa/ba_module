@@ -12,6 +12,10 @@ function ba_module_entity_info_alter(&$entity_info) {
       'label' => t('Discover Tutorials'),
       'custom settings' => TRUE,
   );
+  $entity_info['node']['view modes']['spotlight'] = array(
+      'label' => t('Spotlight'),
+      'custom settings' => TRUE,
+  );
 }
 
 /**
@@ -24,6 +28,10 @@ function ba_module_block_info() {
   );
   $blocks['beginner_tutorials'] = array(
     'info' => t('Beginner Tutorials'),
+    'cache' => DRUPAL_NO_CACHE,
+  );
+  $blocks['spotlight'] = array(
+    'info' => t('Spotlight'),
     'cache' => DRUPAL_NO_CACHE,
   );
   return $blocks;
@@ -49,6 +57,7 @@ function ba_module_block_view($delta = '') {
           ->entityCondition('bundle', 'article')
           ->propertyCondition('status', 1)
           ->fieldCondition('field_instrument', 'tid', $tid, '=')
+          ->fieldCondition('field_difficulty', 'tid', NULL, '=')
           ->propertyOrderBy('created', 'DESC')
           ->range(0,10);
 
@@ -98,6 +107,31 @@ function ba_module_block_view($delta = '') {
       $block['content'] = theme('beginner_tutorials', array('title' => NULL, 'content' => render($view)));
 
       break;
+
+    case 'spotlight':
+      $results = array();
+      $result = NULL;
+      $query = new EntityFieldQuery;
+
+      $query
+        ->entityCondition('entity_type', 'node')
+        ->entityCondition('bundle', 'article')
+        ->propertyCondition('status', 1)
+        ->fieldCondition('field_featured', 'value', 'NOT NULL', '=')
+        ->propertyOrderBy('changed', 'DESC')
+        ->range(0, 1);
+
+      $result = $query->execute();
+      if ($result) {
+        $results += entity_load('node', array_keys($result['node']));
+      }
+
+      $view = entity_view('node', $results, 'spotlight');
+
+      $block['subject'] = NULL;
+      $block['content'] = theme('spotlight', array('title' => NULL, 'content' => render($view)));
+
+      break;
   }
 
   return $block;
@@ -118,6 +152,11 @@ function ba_module_theme() {
       'path' => drupal_get_path('module', 'ba_module') . '/tpl',
       'variables' => array('title' => NULL, 'content' => NULL),
     ),
+    'spotlight' => array(
+      'template' => 'spotlight',
+      'path' => drupal_get_path('module', 'ba_module') . '/tpl',
+      'variables' => array('title' => NULL, 'content' => NULL),
+    ),
   );
 }
 
@@ -132,5 +171,12 @@ function template_preprocess_recent_tutorials(&$variables) {
  * Preprocess beginner_tutorials block
  */
 function template_preprocess_beginner_tutorials(&$variables) {
+  //dpm($variables);
+}
+
+/**
+ * Preprocess spotlight block
+ */
+function template_preprocess_spotlight(&$variables) {
   //dpm($variables);
 }
